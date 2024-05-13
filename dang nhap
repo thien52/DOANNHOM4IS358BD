@@ -1,0 +1,25 @@
+ protected void Login1_Authenticate(object sender, AuthenticateEventArgs e)
+        {
+            string con = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\DoAn_Nhom4_IS385BD\DoAn_Nhom4_IS385BD\App_Data\BanHang.mdf;Integrated Security=True";
+            DataTable dt = new DataTable();
+            string ten = this.Login1.UserName;
+            string pwd = this.Login1.Password;
+            string sql = "select * from KhachHang where tendangnhap = '" + ten + "' and matkhau = '" + pwd + "'";
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                da.Fill(dt);
+            }
+            catch (SqlException ex)
+            {
+                Response.Write("<p><b>Error</b>" + ex.Message + "</p>");
+            }
+            if (dt.Rows.Count != 0)
+            {
+                Response.Cookies["tendangnhap"].Value = ten;
+                Server.Transfer("sanpham.aspx");
+            }
+            else
+            {
+                this.Login1.FailureText = "Tên đăng nhập hoặc mật khẩu không đúng";
+            }
